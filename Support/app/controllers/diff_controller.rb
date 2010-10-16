@@ -42,7 +42,7 @@ class DiffController < ApplicationController
   end
   
   def compare_revisions
-    file_paths = git.paths.first
+    file_paths = git.paths
     if file_paths.length > 1
       base = git.nca(file_paths)
     else 
