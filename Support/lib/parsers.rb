@@ -14,7 +14,7 @@ module Parsers
       {:path => file_path, :display => shorten(file_path, base_dir), :status => Git::GIT_SCM_STATUS_MAP[display_status]}
     end
   end
-  
+
   def parse_status_hash(input)
     output = []
     file_statuses = {}
@@ -40,7 +40,7 @@ module Parsers
           "D"
         when "modified"
           "M"
-        when "unmerged"
+        when "unmerged", 'both modified'
           # do a quick check to see if the merge is resolved
           if File.directory?(path_for(filename)) # it's a submodule
             "G"
@@ -57,7 +57,7 @@ module Parsers
     end
     file_statuses
   end
-  
+
   def file_has_conflict_markers(filename)
     file_contents = File.exist?(filename) ? File.read(filename) : ""
     if /^={7}$/.match(file_contents) && /^\<{7} /.match(file_contents) && /^>{7} /.match(file_contents)
@@ -66,7 +66,7 @@ module Parsers
       false
     end
   end
-  
+
   def parse_commit(commit_output)
     result = {:output => ""}
     commit_output.split("\n").each do |line|
@@ -93,11 +93,11 @@ module Parsers
     end
     result
   end
-  
+
   def parse_annotation(input)
     require 'time.rb'
     require 'date.rb'
-    
+
     output = []
     match_item = /([^\t]+)\t/
     match_last_item = /([^\)]+)\)/
@@ -118,7 +118,7 @@ module Parsers
     end
     output
   end
-  
+
   def parse_merge(input)
     output = {:text => "", :conflicts => []}
     input.split("\n").each do |line|
@@ -132,7 +132,7 @@ module Parsers
     end
     output
   end
-  
+
   def parse_log(log_content)
     output = []
     current = nil
@@ -227,10 +227,10 @@ module Parsers
         ln_right += 1
       when /^\\ (No newline at end of file)/
         last_line = current[:lines].last
-        current[:lines] << { 
+        current[:lines] << {
           :type => :eof,
-          :ln_left => (last_line[:ln_left] && "EOF"), 
-          :ln_right => (last_line[:ln_right] && "EOF"), 
+          :ln_left => (last_line[:ln_left] && "EOF"),
+          :ln_right => (last_line[:ln_right] && "EOF"),
           :text => $1}
       end
     end
@@ -239,7 +239,7 @@ module Parsers
   def process_push(stream, callbacks = {})
     output = {:pushes => {}, :text => "", :nothing_to_push => false}
     branch = nil
-    
+
     process_with_progress(stream, :callbacks => callbacks, :start_regexp => /(?-:remote: )?(Deltifying|Writing) ([0-9]+) objects/) do |line|
       case line
       when /(?-:remote: )?^Everything up\-to\-date/
@@ -252,11 +252,11 @@ module Parsers
       else
         output[:text] << line
       end
-      
+
     end
     output
   end
-  
+
   def process_pull(stream, callbacks = {})
     output = {:pulls => {}, :text => "", :nothing_to_pull => false}
     branch = nil
@@ -274,12 +274,12 @@ module Parsers
       when /^ +([0-9a-f]+\.\.[0-9a-f]+) +([^ ]+) +\-\> (.+)$/
         output[:pulls][$2] = get_rev_range($1)
       end
-      
+
       output[:text] << line
     end
     output
   end
-  
+
   def process_fetch(stream, callbacks = {})
     output = {:fetches => {}, :text => ""}
     process_with_progress(stream, :callbacks => callbacks, :start_regexp => /(?-:remote: )?(Compressing) ([0-9]+) objects/) do |line|
@@ -293,12 +293,12 @@ module Parsers
       when /^ +([0-9a-f]+\.\.[0-9a-f]+) +([^ ]+) +\-\> (.+)$/
         output[:fetches][$2] = get_rev_range($1)
       end
-      
+
       output[:text] << line
     end
     output
   end
-  
+
   include StreamProgressMethods
   extend self
 end
