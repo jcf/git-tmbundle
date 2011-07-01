@@ -307,6 +307,9 @@ module SCM
       file = make_local_path(file_path)
       args = [file]
       args << revision unless revision.nil? || revision.empty?
+      # Ignore whitespace when comparing the parent's version and
+      # the child's to find where the lines came from.
+      args << '-w'
       output = command("annotate", *args)
       if output.match(/^fatal:/)
         puts output 
