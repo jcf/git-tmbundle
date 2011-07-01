@@ -27,7 +27,7 @@ module Parsers
         state = :modified
       when /^# Untracked files:/
         state = :untracked
-      when /^#\t(([a-z ]+): +){0,1}(.*)$/
+      when /^#\t(([a-z ]+): +){0,1}(.*?)(?: \([a-z ]+\))?$/
         filename = $3
         status_description = $2
         status = case status_description
