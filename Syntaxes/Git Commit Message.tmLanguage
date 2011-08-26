@@ -36,18 +36,18 @@
 		</dict>
 		<dict>
 			<key>begin</key>
-			<string>^((.{1,50}\s*)|(.{51,65}\s*)|(.+\s*))$</string>
+			<string>^((.{0,50}\s*)|(.{51,65}\s*)|(.+\s*))$</string>
 			<key>beginCaptures</key>
 			<dict>
 				<key>3</key>
 				<dict>
 					<key>name</key>
-					<string>invalid.warning.line-too-long.git-commit</string>
+					<string>invalid.deprecated.line-too-long.git-commit</string>
 				</dict>
 				<key>4</key>
 				<dict>
 					<key>name</key>
-					<string>invalid.error.line-too-long.git-commit</string>
+					<string>invalid.illegal.line-too-long.git-commit</string>
 				</dict>
 			</dict>
 			<key>comment</key>
@@ -59,57 +59,57 @@
 				<dict>
 					<key>captures</key>
 					<dict>
+						<key>0</key>
+						<dict>
+							<key>name</key>
+							<string>markup.changed.git-commit</string>
+						</dict>
 						<key>1</key>
 						<dict>
 							<key>name</key>
 							<string>punctuation.definition.comment.git-commit</string>
 						</dict>
-						<key>2</key>
-						<dict>
-							<key>name</key>
-							<string>meta.git-commit.modified</string>
-						</dict>
 					</dict>
 					<key>match</key>
-					<string>(^#\s*)(modified:.*)$</string>
+					<string>(^#)\s*(modified:.*)$\n?</string>
 					<key>name</key>
 					<string>comment.line.number-sign.git-commit</string>
 				</dict>
 				<dict>
 					<key>captures</key>
 					<dict>
+						<key>0</key>
+						<dict>
+							<key>name</key>
+							<string>markup.inserted.git-commit</string>
+						</dict>
 						<key>1</key>
 						<dict>
 							<key>name</key>
 							<string>punctuation.definition.comment.git-commit</string>
 						</dict>
-						<key>2</key>
-						<dict>
-							<key>name</key>
-							<string>meta.git-commit.new</string>
-						</dict>
 					</dict>
 					<key>match</key>
-					<string>(^#\s*)(new file:.*)$</string>
+					<string>(^#)\s*(new file:.*)$\n?</string>
 					<key>name</key>
 					<string>comment.line.number-sign.git-commit</string>
 				</dict>
 				<dict>
 					<key>captures</key>
 					<dict>
+						<key>0</key>
+						<dict>
+							<key>name</key>
+							<string>markup.deleted.git-commit</string>
+						</dict>
 						<key>1</key>
 						<dict>
 							<key>name</key>
 							<string>punctuation.definition.comment.git-commit</string>
 						</dict>
-						<key>2</key>
-						<dict>
-							<key>name</key>
-							<string>meta.git-commit.deleted</string>
-						</dict>
 					</dict>
 					<key>match</key>
-					<string>(^#\s*)(deleted:.*)$</string>
+					<string>(^#)\s*(deleted:.*)$\n?</string>
 					<key>name</key>
 					<string>comment.line.number-sign.git-commit</string>
 				</dict>
